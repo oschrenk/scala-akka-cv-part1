@@ -1,12 +1,11 @@
 package com.beachape.video
 
 import akka.actor.{ DeadLetterSuppression, Props, ActorSystem, ActorLogging }
-import akka.stream.Materializer
 import akka.stream.actor.ActorPublisher
 import akka.stream.actor.ActorPublisherMessage.{ Cancel, Request }
-import akka.stream.scaladsl.{ Sink, Source }
+import akka.stream.scaladsl.Source
 import org.bytedeco.javacpp.opencv_core._
-import org.bytedeco.javacv.{ OpenCVFrameGrabber, Frame }
+import org.bytedeco.javacv.{ FrameGrabber, Frame }
 import org.bytedeco.javacv.FrameGrabber.ImageMode
 
 /**
@@ -53,8 +52,8 @@ object Webcam {
     imageHeight: Int,
     bitsPerPixel: Int,
     imageMode: ImageMode
-  ): OpenCVFrameGrabber = synchronized {
-    val g = new OpenCVFrameGrabber(deviceId)
+  ): FrameGrabber = synchronized {
+    val g = FrameGrabber.createDefault(deviceId)
     g.setImageWidth(imageWidth)
     g.setImageHeight(imageHeight)
     g.setBitsPerPixel(bitsPerPixel)
