@@ -1,13 +1,15 @@
 package com.beachape
 
-import java.awt.{DisplayMode, GraphicsDevice, GraphicsEnvironment}
+import java.io.File
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import com.beachape.transform.{Flip, MediaConversion, Resize}
+import com.beachape.analysis.FaceDetector
+import com.beachape.modify.FaceDrawer
+import com.beachape.transform.{Flip, MediaConversion, Resize, WithGrey}
 import com.beachape.video.Webcam
-import javax.swing.{JFrame, JPanel, WindowConstants}
+import javax.swing.WindowConstants
 import org.bytedeco.javacv.CanvasFrame
 
 import scala.swing.Dimension
@@ -23,11 +25,18 @@ object WebcamWindow extends App {
   val dimensions = new Dimension(640, 480)
   val webcamSource = Webcam.source(deviceId = 0, dimension = dimensions)
 
+  val classifier = new File(".", "haarcascade_frontalface_alt.xml").getCanonicalPath
+  val detector = new FaceDetector(dimensions, classifier)
+  val faceDrawer = new FaceDrawer()
+
   val graph = webcamSource
     .map(MediaConversion.toMat)
     // frame grabber does not respect the dimensions, so we manually resize
     .map(m => Resize.to(m, dimensions.width, dimensions.height))
     .map(Flip.horizontal)
+    .map(WithGrey.build)
+    .map(detector.detect)
+    .map((faceDrawer.drawFaces _).tupled)
     .map(MediaConversion.toFrame)
     .map(canvas.showImage)
     .to(Sink.ignore)
