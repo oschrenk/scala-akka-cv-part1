@@ -9,6 +9,7 @@ import org.bytedeco.javacv.{Frame, FrameGrabber}
 import org.bytedeco.javacv.FrameGrabber.ImageMode
 
 import scala.concurrent.ExecutionContextExecutor
+import scala.swing.Dimension
 
 /**
  * Created by Lloyd on 2/13/16.
@@ -20,7 +21,7 @@ object Webcam {
    * Builds a Frame [[Source]]
    *
    * @param deviceId device ID for the webcam
-   * @param dimensions dimensions of screen
+   * @param dimension dimensions of screen
    * @param bitsPerPixel bits per pixel
    * @param imageMode the image mode
    * @param system ActorSystem
@@ -28,15 +29,15 @@ object Webcam {
    */
   def source(
     deviceId: Int,
-    dimensions: Dimensions,
+    dimension: Dimension,
     bitsPerPixel: Int = CV_8U,
     imageMode: ImageMode = ImageMode.COLOR
   )(implicit system: ActorSystem): Source[Frame, _] = {
     val props = Props(
       new WebcamFramePublisher(
         deviceId = deviceId,
-        imageWidth = dimensions.width,
-        imageHeight = dimensions.height,
+        imageWidth = dimension.width,
+        imageHeight = dimension.height,
         bitsPerPixel = bitsPerPixel,
         imageMode = imageMode
       )
