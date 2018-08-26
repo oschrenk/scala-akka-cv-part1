@@ -1,9 +1,9 @@
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.12"
 val root = Project(id = "scala-cv-part1", base = file("."))
   .settings(
     name := """scala-cv-part1""",
     version := "0.0.1",
-    scalaVersion := "2.11.8",
+    scalaVersion := "2.11.12",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-stream" % "2.4.6"
     ),
