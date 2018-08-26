@@ -10,8 +10,8 @@ import org.bytedeco.javacv.CanvasFrame
 
 object WebcamWindow extends App {
 
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val canvas = new CanvasFrame("Webcam")
   canvas.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)

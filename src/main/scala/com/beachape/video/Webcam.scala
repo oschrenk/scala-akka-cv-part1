@@ -1,12 +1,14 @@
 package com.beachape.video
 
-import akka.actor.{ DeadLetterSuppression, Props, ActorSystem, ActorLogging }
+import akka.actor.{ActorLogging, ActorSystem, DeadLetterSuppression, Props}
 import akka.stream.actor.ActorPublisher
-import akka.stream.actor.ActorPublisherMessage.{ Cancel, Request }
+import akka.stream.actor.ActorPublisherMessage.{Cancel, Request}
 import akka.stream.scaladsl.Source
 import org.bytedeco.javacpp.opencv_core._
-import org.bytedeco.javacv.{ FrameGrabber, Frame }
+import org.bytedeco.javacv.{Frame, FrameGrabber}
 import org.bytedeco.javacv.FrameGrabber.ImageMode
+
+import scala.concurrent.ExecutionContextExecutor
 
 /**
  * Created by Lloyd on 2/13/16.
@@ -18,9 +20,9 @@ object Webcam {
    * Builds a Frame [[Source]]
    *
    * @param deviceId device ID for the webcam
-   * @param dimensions
-   * @param bitsPerPixel
-   * @param imageMode
+   * @param dimensions dimensions of screen
+   * @param bitsPerPixel bits per pixel
+   * @param imageMode the image mode
    * @param system ActorSystem
    * @return a Source of [[Frame]]s
    */
@@ -73,7 +75,7 @@ object Webcam {
       imageMode: ImageMode
   ) extends ActorPublisher[Frame] with ActorLogging {
 
-    private implicit val ec = context.dispatcher
+    private implicit val ec: ExecutionContextExecutor = context.dispatcher
 
     // Lazy so that nothing happens until the flow begins
     private lazy val grabber = buildGrabber(
