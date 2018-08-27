@@ -14,7 +14,7 @@ class FaceDrawer(fontScale: Float = 0.6f) {
    * Clones the Mat, draws squares around the faces on it using the provided [[Face]] sequence and returns the new Mat
    */
   def drawFaces(withGrey: WithGrey, faces: Seq[Face]): Mat = {
-    val clonedMat = withGrey.orig.clone()
+    val clonedMat = withGrey.grey.clone()
     for (f <- faces) drawFace(clonedMat, f)
     clonedMat
   }

@@ -5,9 +5,9 @@ import java.io.File
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import com.beachape.analysis.FaceDetector
+import com.beachape.analysis.{FaceDetector, ShapeDetector}
 import com.beachape.modify.FaceDrawer
-import com.beachape.transform.{Flip, MediaConversion, Resize, WithGrey}
+import com.beachape.transform._
 import com.beachape.video.Webcam
 import javax.swing.WindowConstants
 import org.bytedeco.javacv.CanvasFrame
@@ -26,8 +26,10 @@ object WebcamWindow extends App {
   val webcamSource = Webcam.source(deviceId = 0, dimension = dimensions)
 
   val classifier = new File(".", "haarcascade_frontalface_alt.xml").getCanonicalPath
-  val detector = new FaceDetector(dimensions, classifier)
+  val faceDetector = new FaceDetector(dimensions, classifier)
   val faceDrawer = new FaceDrawer()
+
+  val shapeDetector = new ShapeDetector()
 
   val graph = webcamSource
     .map(MediaConversion.toMat)
@@ -35,9 +37,9 @@ object WebcamWindow extends App {
     .map(m => Resize.to(m, dimensions.width, dimensions.height))
     .map(Flip.horizontal)
     .map(WithGrey.build)
-    .map(detector.detect)
-    .map((faceDrawer.drawFaces _).tupled)
-    .map(MediaConversion.toFrame)
+    .map(m => Transformations.medianBlur(m))
+    .map(shapeDetector.detect)
+    .map(m => MediaConversion.toFrame(m._1.grey))
     .map(canvas.showImage)
     .to(Sink.ignore)
 
