@@ -2,9 +2,22 @@ package com.beachape.analysis
 
 import com.beachape.transform.WithGrey
 import org.bytedeco.javacpp.opencv_core._
-import org.bytedeco.javacpp.opencv_objdetect.CascadeClassifier
+import org.bytedeco.javacpp.opencv_objdetect.{CascadeClassifier, _}
 
 import scala.swing.Dimension
+
+case class Face(id: Long, faceRect: Rect)
+
+sealed abstract class HaarDetectorFlag(val flag: Int)
+
+case object HaarDetectorFlag {
+
+  case object DoCannyPruning extends HaarDetectorFlag(CV_HAAR_DO_CANNY_PRUNING)
+  case object ScaleImage extends HaarDetectorFlag(CV_HAAR_SCALE_IMAGE)
+  case object FindBiggestObject extends HaarDetectorFlag(CV_HAAR_FIND_BIGGEST_OBJECT)
+  case object DoRoughSearch extends HaarDetectorFlag(CV_HAAR_DO_ROUGH_SEARCH)
+
+}
 
 class FaceDetector(
     val dimensions: Dimension,

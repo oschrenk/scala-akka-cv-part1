@@ -5,6 +5,8 @@ import org.bytedeco.javacpp.opencv_core
 import org.bytedeco.javacpp.opencv_core._
 import org.bytedeco.javacpp.opencv_imgproc._
 
+case class Shape(id: Long, shape: Mat)
+
 class ShapeDetector {
 
   def detect(frameMatWithGrey: WithGrey): (WithGrey, Seq[Shape]) = {
@@ -28,7 +30,7 @@ class ShapeDetector {
       c <- triangles
       s = {
         val ipl = new IplImage(c.shape)
-        val rows = 0 to c.shape.rows() - 1
+        val rows = 0 until c.shape.rows()
         rows.map(r => {
           val scalar = opencv_core.cvGet2D(ipl, r, 0)
           (scalar.get(0),scalar.get(1))

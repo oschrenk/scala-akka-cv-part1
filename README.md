@@ -7,6 +7,8 @@ The goal is to hold up lego bricks (on a big lego plate) and to identify those b
 `sbt run`
 
 ## TODO
+* replace deprecated ActorPublisher with GraphStage
+  (re-enable fatal warnings that again)
 * control which camera to use
 * control image size
 * control to display processed video next to source video

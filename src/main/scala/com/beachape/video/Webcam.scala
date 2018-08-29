@@ -5,10 +5,9 @@ import akka.stream.actor.ActorPublisher
 import akka.stream.actor.ActorPublisherMessage.{Cancel, Request}
 import akka.stream.scaladsl.Source
 import org.bytedeco.javacpp.opencv_core._
-import org.bytedeco.javacv.{Frame, FrameGrabber}
 import org.bytedeco.javacv.FrameGrabber.ImageMode
+import org.bytedeco.javacv.{Frame, FrameGrabber}
 
-import scala.concurrent.ExecutionContextExecutor
 import scala.swing.Dimension
 
 /**
@@ -75,8 +74,6 @@ object Webcam {
       bitsPerPixel: Int,
       imageMode: ImageMode
   ) extends ActorPublisher[Frame] with ActorLogging {
-
-    private implicit val ec: ExecutionContextExecutor = context.dispatcher
 
     // Lazy so that nothing happens until the flow begins
     private lazy val grabber = buildGrabber(

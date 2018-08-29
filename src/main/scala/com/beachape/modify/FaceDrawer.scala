@@ -32,7 +32,7 @@ class FaceDrawer(fontScale: Float = 0.6f) {
 
     // draw the face number
     val cvPoint = new Point(f.faceRect.x, f.faceRect.y - 20)
-    putText(clonedMat, s"Face ${f.id}", cvPoint, FONT_HERSHEY_SIMPLEX, fontScale, RedColour)
+    putText(clonedMat, s"Face ${f.id}", cvPoint, FONT_HERSHEY_SIMPLEX, fontScale.toDouble, RedColour)
   }
 
 }
